@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:bayzdelivery
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+  data:
+    rest:
+      base-path: /api

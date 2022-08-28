@@ -1,0 +1,59 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<changeSet author="bayzdelivery" id="20220820105500000_create_table">
+		<createTable tableName="orders">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" primaryKeyName="pk_order" />
+			</column>
+			<column name="order_time" type="TIMESTAMP" />
+			<column name="device" type="VARCHAR(2)" />
+			<column name="order_status" type="VARCHAR(2)" />
+			<column name="delivery_man_id" type="BIGINT"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="delivery_man_id"
+            baseTableName="orders"
+            constraintName="fk_order_delivery_man"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="id"
+            referencedTableName="person"/>
+	</changeSet>
+
+	<changeSet author="bayzdelivery" id="20220820105500000_alter_delivery_table">
+		<preConditions onFail="HALT">
+			<tableExists tableName="delivery" />
+		</preConditions>
+		<addColumn tableName="delivery">
+			<column name="comission" type="DECIMAL" />
+		</addColumn>
+		<addColumn tableName="delivery">
+			<column name="order_id" type="BIGINT" />
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="order_id"
+            baseTableName="delivery"
+            constraintName="fk_order_person_delivery"
+            onDelete="CASCADE"
+            onUpdate="RESTRICT"
+            referencedColumnNames="id"
+            referencedTableName="orders"/>
+	</changeSet>
+
+	<changeSet author="bayzdelivery" id="20220820105500000_alter_person_table">
+		<preConditions onFail="HALT">
+			<tableExists tableName="person" />
+		</preConditions>
+		<addColumn tableName="person">
+			<column name="type" type="VARCHAR(1)" />
+		</addColumn>
+	</changeSet>
+
+	<changeSet author="bayzdelivery" id="20220820105500000_modify_data_type_of_delivery_table_columns">
+		<modifyDataType tableName="delivery" columnName="distance" newDataType="DECIMAL" />
+		<modifyDataType tableName="delivery" columnName="price" newDataType="DECIMAL" />
+	</changeSet>
+</databaseChangeLog>
